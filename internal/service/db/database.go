@@ -17,6 +17,7 @@ const (
 type DataBase interface {
 	LoadByID(id int) ([]postgres.User, error)
 	LoadAll() ([]postgres.User, error)
+	LoadByLogin(login string) ([]postgres.User, error)
 }
 
 func New() (DataBase, error) {

@@ -24,8 +24,8 @@ type ServerImpl struct {
 func (serv *ServerImpl) SetHandlers() {
 	r := mux.NewRouter()
 	r.HandleFunc("/users", serv.allUsers).Methods("GET")
-	r.HandleFunc("/by-id", nil).Methods("GET")
-	r.HandleFunc("/by-login", nil).Methods("GET")
+	r.HandleFunc("/by-id/", serv.byID).Methods("GET")
+	r.HandleFunc("/by-login/", serv.byLogin).Methods("GET")
 	http.Handle("/", r)
 	serv.router = r
 
