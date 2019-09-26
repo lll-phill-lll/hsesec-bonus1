@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	db2 "github.com/lll-phill-lll/hsesec/internal/service/db"
+	"github.com/lll-phill-lll/hsesec/internal/service/db"
 	"github.com/lll-phill-lll/hsesec/internal/service/web"
 )
 
 func main() {
-	db, err := db2.New()
+	database, err := db.New()
 	if err != nil {
 		fmt.Println(err)
 	}
-	serv := web.New(db)
+	serv := web.New(database)
 	serv.SetHandlers()
 	err = serv.StartServe(9090)
 	if err != nil {

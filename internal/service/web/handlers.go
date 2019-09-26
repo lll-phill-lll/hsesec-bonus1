@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"github.com/lll-phill-lll/hsesec/internal/service/db/postgres"
+	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -60,6 +61,18 @@ func (serv *ServerImpl) byID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (serv *ServerImpl) home(w http.ResponseWriter, r *http.Request) {
+	t := template.New("home.html") // Create a template.
+	t, err := t.ParseFiles("home.html")  // Parse template file.
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = t.Execute(w, nil)  // merge
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func constructUsersTable(users []postgres.User) string {
 	str := `<table border="1">`
 	str += "<tr>"
@@ -82,5 +95,6 @@ func constructUsersTable(users []postgres.User) string {
 
 	}
 	str += "</table>"
+	str += `<input type="button" value="Go back!" onclick="history.back()">`
 	return fmt.Sprintf(usersResponseTemplate, str)
 }

@@ -26,6 +26,7 @@ func (serv *ServerImpl) SetHandlers() {
 	r.HandleFunc("/users", serv.allUsers).Methods("GET")
 	r.HandleFunc("/by-id/", serv.byID).Methods("GET")
 	r.HandleFunc("/by-login/", serv.byLogin).Methods("GET")
+	r.HandleFunc("/", serv.home).Methods("GET")
 	http.Handle("/", r)
 	serv.router = r
 
