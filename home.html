@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<body>
+<input type = "text" id = "idInput" oninput = "idFunction()">
+<a href="" id = "id" ><button>by id</button></a>
+<input type = "text" id = "loginInput" oninput = "loginFunction()">
+<a href="" id = "login" ><button>by login </button></a>
+<input type="button" onclick="location.href+='users';" value="Users" />
+<script>
+    function idFunction() {
+        let x = document.getElementById("idInput").value;
+        document.getElementById("id").setAttribute("href",
+            window.location.href + "/by-id/?id=" + x);
+    }
+    function loginFunction() {
+        let x = document.getElementById("loginInput").value;
+        document.getElementById("login").setAttribute("href",
+            window.location.href + "/by-login/?login=" + x);
+    }
+</script>
+</body>
+</html>
