@@ -2,37 +2,49 @@ package postgres
 
 import (
 	"database/sql"
-	"fmt"
-	"github.com/lll-phill-lll/hsesec/internal/service/db"
+	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "bankuser"
-	password = "bankpassword"
-	dbname   = "bank"
-)
-
-type postgresDB struct {
-	DB   *sql.DB
+type PDB struct {
+	DB *sql.DB
 }
 
-func New() (db.DataBase, error) {
-	postgres := postgresDB{}
-
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	database, err := sql.Open("postgres", psqlInfo)
+func (pdb PDB) LoadByID(id int) ([]User, error) {
+	rows, err := pdb.DB.Query("SELECT * FROM users WHERE id=$1", id)
+	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
-	err = database.Ping()
+	var users []User
+	for rows.Next() {
+		user := User{}
+		err = rows.Scan(&user.Id, &user.Login, &user.MoneyAmount, &user.CardNumber, &user.Status)
+		if err != nil {
+			return nil, err
+		}
+		if user.Status {
+			users = append(users, user)
+		}
+	}
+	return users, nil
+}
+
+func (pdb PDB) LoadAll() ([]User, error) {
+	rows, err := pdb.DB.Query("SELECT * FROM users")
+	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
-	postgres.DB = database
-
-	return postgres, nil
+	var users []User
+	for rows.Next() {
+		user := User{}
+		err = rows.Scan(&user.Id, &user.Login, &user.MoneyAmount, &user.CardNumber, &user.Status)
+		if err != nil {
+			return nil, err
+		}
+		if user.Status {
+			users = append(users, user)
+		}
+	}
+	return users, nil
 }

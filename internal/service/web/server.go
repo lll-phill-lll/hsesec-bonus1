@@ -1,9 +1,10 @@
 package web
 
 import (
+	"github.com/gorilla/mux"
+	"github.com/lll-phill-lll/hsesec/internal/service/db"
 	"net/http"
 	"strconv"
-	"github.com/gorilla/mux"
 )
 
 type Server interface {
@@ -11,17 +12,18 @@ type Server interface {
 	StartServe(int) error
 }
 
-func New() Server {
-	return &ServerImpl{}
+func New(base db.DataBase) Server {
+	return &ServerImpl{DB: base}
 }
 
 type ServerImpl struct {
 	router *mux.Router
+	DB     db.DataBase
 }
 
 func (serv *ServerImpl) SetHandlers() {
 	r := mux.NewRouter()
-	r.HandleFunc("/users", getAllUsers).Methods("GET")
+	r.HandleFunc("/users", serv.allUsers).Methods("GET")
 	r.HandleFunc("/by-id", nil).Methods("GET")
 	r.HandleFunc("/by-login", nil).Methods("GET")
 	http.Handle("/", r)

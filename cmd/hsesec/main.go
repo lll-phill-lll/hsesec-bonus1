@@ -2,15 +2,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/lll-phill-lll/hsesec/internal/service/db/postgres"
+	db2 "github.com/lll-phill-lll/hsesec/internal/service/db"
 	"github.com/lll-phill-lll/hsesec/internal/service/web"
 )
 
 func main() {
-	_, _ = postgres.New()
-	serv := web.New()
+	db, err := db2.New()
+	if err != nil {
+		fmt.Println(err)
+	}
+	serv := web.New(db)
 	serv.SetHandlers()
-	err := serv.StartServe(9090)
+	err = serv.StartServe(9090)
 	if err != nil {
 		fmt.Println(err)
 	}
